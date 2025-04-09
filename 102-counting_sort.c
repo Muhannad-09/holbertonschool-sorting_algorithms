@@ -3,13 +3,12 @@
 #include "sort.h"
 
 /**
- * get_max - Finds the maximum value in an array.
- * @array: The array to scan.
- * @size: Size of the array.
- *
- * Return: Maximum integer in the array.
+ * find_max - Finds the maximum number in the array
+ * @array: Array to search
+ * @size: Size of the array
+ * Return: The maximum integer
  */
-int get_max(int *array, size_t size)
+int find_max(int *array, size_t size)
 {
 	size_t i;
 	int max = array[0];
@@ -23,72 +22,65 @@ int get_max(int *array, size_t size)
 }
 
 /**
- * fill_count_array - Counts occurrences of each number.
- * @array: The input array.
- * @size: Size of the array.
- * @count: The count array.
+ * build_count_array - Builds and fills count array
+ * @array: Input array
+ * @size: Size of input array
+ * @max: Max number in array
+ * Return: Pointer to count array or NULL on failure
  */
-void fill_count_array(int *array, size_t size, int *count)
+int *build_count_array(int *array, size_t size, int max)
 {
+	int *count;
 	size_t i;
+
+	count = malloc(sizeof(int) * (max + 1));
+	if (!count)
+		return (NULL);
+
+	for (i = 0; i <= (size_t)max; i++)
+		count[i] = 0;
 
 	for (i = 0; i < size; i++)
 		count[array[i]]++;
-}
 
-/**
- * accumulate_count_array - Turns count array into cumulative sum.
- * @count: The count array.
- * @max: Maximum number in original array.
- */
-void accumulate_count_array(int *count, int max)
-{
-	int i;
-
-	for (i = 1; i <= max; i++)
+	for (i = 1; i <= (size_t)max; i++)
 		count[i] += count[i - 1];
+
+	print_array(count, max + 1);
+	return (count);
 }
 
 /**
- * build_sorted_array - Reconstructs sorted array from counts.
- * @array: Original array.
- * @size: Size of the array.
- * @count: Count array.
- * @output: Output array.
- */
-void build_sorted_array(int *array, size_t size, int *count, int *output)
-{
-	int i;
-
-	for (i = size - 1; i >= 0; i--)
-	{
-		output[count[array[i]] - 1] = array[i];
-		count[array[i]]--;
-	}
-}
-
-/**
- * counting_sort - Sorts an array using counting sort algorithm.
- * @array: The array to sort.
- * @size: Size of the array.
+ * counting_sort - Sorts an array using Counting sort algorithm
+ * @array: Array to sort
+ * @size: Size of the array
  */
 void counting_sort(int *array, size_t size)
 {
-	int max, *count, *output;
+	int *count, *output;
 	size_t i;
+	int max;
 
-	if (!array || size < 2)
+	if (array == NULL || size < 2)
 		return;
 
-	max = get_max(array, size);
-	count = calloc(max + 1, sizeof(int));
+	max = find_max(array, size);
+	count = build_count_array(array, size, max);
+	if (!count)
+		return;
+
 	output = malloc(sizeof(int) * size);
-	if (!count || !output)
+	if (!output)
+	{
+		free(count);
 		return;
+	}
 
-	fill_count_array(array, size, count);
-	accumulate_count_array(count, max);
-	build_sorted_array(array, size, count, output);
+	for (i = size; i > 0; i--)
+	{
+		output[count[array[i - 1]] - 1] = array[i - 1];
+		count[array[i - 1]]--;
+	}
 
 	for (i = 0; i < size; i++)
 		array[i] = output[i];
