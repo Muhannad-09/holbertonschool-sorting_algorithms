@@ -1,0 +1,66 @@
+#include "sort.h"
+#include <stdio.h>
+
+/**
+ * swap - Swap two integers in an array.
+ * @a: First integer.
+ * @b: Second integer.
+ */
+void swap(int *a, int *b)
+{
+	int tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+/**
+ * sift_down - Maintains the heap property.
+ * @array: The array representing the heap.
+ * @size: Total size of the array.
+ * @i: Index of the root of the subtree.
+ * @heap_size: Current size of the heap.
+ */
+void sift_down(int *array, size_t size, int i, size_t heap_size)
+{
+	int largest = i;
+	int left = 2 * i + 1;
+	int right = 2 * i + 2;
+
+	if (left < (int)heap_size && array[left] > array[largest])
+		largest = left;
+
+	if (right < (int)heap_size && array[right] > array[largest])
+		largest = right;
+
+	if (largest != i)
+	{
+		swap(&array[i], &array[largest]);
+		print_array(array, size);
+		sift_down(array, size, largest, heap_size);
+	}
+}
+
+/**
+ * heap_sort - Sorts an array using Heap sort algorithm.
+ * @array: Array to sort.
+ * @size: Size of array.
+ */
+void heap_sort(int *array, size_t size)
+{
+	int i;
+
+	if (!array || size < 2)
+		return;
+
+	/* Build max heap */
+	for (i = (int)(size / 2) - 1; i >= 0; i--)
+		sift_down(array, size, i, size);
+
+	/* Heap sort */
+	for (i = (int)(size - 1); i > 0; i--)
+	{
+		swap(&array[0], &array[i]);
+		print_array(array, size);
+		sift_down(array, size, 0, i);
+	}
+}
