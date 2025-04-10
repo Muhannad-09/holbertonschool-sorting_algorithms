@@ -21,7 +21,7 @@ int _strcmp(const char *s1, const char *s2)
  * card_value - assigns a numerical value to a card
  * @value: the string value of the card (e.g., "Ace", "10", "Jack")
  *
- * Return: the numeric value of the card (0 to 13)
+ * Return: the numeric value of the card (0 to 12)
  */
 int card_value(const char *value)
 {
@@ -38,7 +38,7 @@ int card_value(const char *value)
 }
 
 /**
- * compare_cards - compares two cards
+ * compare_cards - compares two cards for sorting
  * @a: first card
  * @b: second card
  *
@@ -46,12 +46,10 @@ int card_value(const char *value)
  */
 int compare_cards(const deck_node_t *a, const deck_node_t *b)
 {
-	int val_a = card_value(a->card->value);
-	int val_b = card_value(b->card->value);
-
-	if (val_a == val_b)
+	if (a->card->kind != b->card->kind)
 		return (a->card->kind - b->card->kind);
-	return (val_a - val_b);
+
+	return (card_value(a->card->value) - card_value(b->card->value));
 }
 
 /**
