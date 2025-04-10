@@ -32,11 +32,11 @@ int hoare_partition(int *array, int low, int high, size_t size)
 	{
 		do {
 			i++;
-		} while (i <= high && array[i] < pivot);
+		} while (array[i] < pivot);
 
 		do {
 			j--;
-		} while (j >= low && array[j] > pivot);
+		} while (array[j] > pivot);
 
 		if (i >= j)
 			return (j);
