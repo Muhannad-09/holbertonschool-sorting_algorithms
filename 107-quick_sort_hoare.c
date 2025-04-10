@@ -60,8 +60,10 @@ void hoare_sort(int *array, int low, int high, size_t size)
 	if (low < high)
 	{
 		p = hoare_partition(array, low, high, size);
-		hoare_sort(array, low, p, size);
-		hoare_sort(array, p + 1, high, size);
+		if (p > low)
+			hoare_sort(array, low, p, size);
+		if (p + 1 < high)
+			hoare_sort(array, p + 1, high, size);
 	}
 }
 
